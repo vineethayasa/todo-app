@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  code-validation_and_build:
+  build_test_deploy_errorhandling:
     runs-on: ubuntu-latest
 
     services:
@@ -67,5 +67,7 @@ jobs:
             Build and Deploy Status: ${{ job.status }}
             Job Name: ${{ github.job }}
             Workflow: ${{ github.workflow }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
