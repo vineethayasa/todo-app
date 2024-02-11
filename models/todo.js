@@ -1,3 +1,6 @@
+/* eslint-disable valid-jsdoc */
+/* eslint-disable require-jsdoc */
+/* eslint-disable no-unused-vars */
 "use strict";
 const { Model, Op, DataTypes } = require("sequelize");
 

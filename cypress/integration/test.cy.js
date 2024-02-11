@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 function formatDateWithOffset(daysOffset = 0) {
   const date = new Date();
   date.setDate(date.getDate() + daysOffset);
@@ -67,5 +68,4 @@ describe("Todo Application", () => {
 
     cy.get(".Todo-Item").contains("Sample todo item").should("exist");
   });
-  
 });
