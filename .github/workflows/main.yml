@@ -59,4 +59,5 @@ jobs:
           status: starting
           channel: '#github-notifications'
           message: Starting Build and Deploy...
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
