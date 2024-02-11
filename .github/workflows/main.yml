@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  code-validation and build:
+  code-validation_and_build:
     runs-on: ubuntu-latest
 
     steps:
