@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  validate-code:
+  ci-cd:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,36 +19,18 @@ jobs:
       - name: Lint code
         run: npm run lint
 
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:11.7
-        env:
-          POSTGRES_USER: ${{ secrets.PG_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup PostgreSQL
+        uses: postgresql/setup-postgres@v2
+        with:
+          postgres-version: '11.7'
+          postgresql-user: ${{ secrets.PG_USER }}
+          postgresql-password: ${{ secrets.PG_PASSWORD }}
+          postgresql-db: ${{ secrets.PG_DATABASE }}
 
       - name: Run unit tests
         run: npm test
 
       - name: Run the app
-        id: run-app
         run: |
           npm install
           npx sequelize-cli db:drop
@@ -62,19 +44,11 @@ jobs:
           npm install cypress cypress-json-results
           npx cypress run
 
-    # deploy:
-    # runs-on: ubuntu-latest
-
-    # needs: build-and-test
-
-    # steps:
-    #   - name: Checkout repository code
-    #     uses: actions/checkout@v3
-
-    #   - name: Deploy to staging
-    #     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    #     run: |
-    #       echo "Deploying to staging environment"
-    #       # Add your deployment commands here
-    #       # Example: scp or rsync to copy files to the server
-    #       # Example: ssh to the server and restart the application
+      # Uncomment the deploy steps when you're ready to deploy
+      # - name: Deploy to staging
+      #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      #   run: |
+      #     echo "Deploying to staging environment"
+      #     # Add your deployment commands here
+      #     # Example: scp or rsync to copy files to the server
+      #     # Example: ssh to the server and restart the application
