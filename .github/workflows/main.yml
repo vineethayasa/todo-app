@@ -1,14 +1,20 @@
+# CI/CD Pipeline Configuration
+
 name: CI/CD Pipeline
 
+# Trigger the workflow on every push to the 'main' branch
 on:
   push:
     branches:
       - main
 
+# Define the jobs for the workflow
 jobs:
+  # Job to build, test, deploy, and handle errors
   build_test_deploy_errorhandling:
     runs-on: ubuntu-latest
 
+    # Define services needed for the job, in this case, a PostgreSQL database
     services:
       postgres:
         image: postgres:11.7
@@ -24,19 +30,25 @@ jobs:
         ports:
           - 5432:5432
 
+    # Define steps to be executed in the job
     steps:
+      # Step to checkout the repository code
       - name: Checkout repository code
         uses: actions/checkout@v3
 
+      # Step to install project dependencies
       - name: Install dependencies
-        run: npm cid
+        run: npm ci
 
+      # Step to lint the code
       - name: Lint code
         run: npm run lint
 
+      # Step to run unit tests
       - name: Run unit tests
         run: npm test
 
+      # Step to run the application
       - name: Run the app
         id: run-app
         run: |
@@ -47,17 +59,20 @@ jobs:
           PORT=3000 npm start &
           sleep 5
 
+      # Step to run integration tests using Cypress
       - name: Run integration tests
         run: |
           npm install cypress cypress-json-results
           npx cypress run
 
+      # Step to deploy to production using Render
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
 
+      # Step to send Slack notification on failure
       - name: Slack Notification
         uses: act10ns/slack@v1
         with:
@@ -70,4 +85,4 @@ jobs:
             Commit Message: ${{ github.event.head_commit.message }}
             Branch: ${{ github.ref }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+        if: failure()  # Send notification only on job failure
