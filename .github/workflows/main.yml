@@ -6,7 +6,20 @@ on:
       - main
 
 jobs:
-  ci-cd:
+  code-validation_and_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+  test:
     runs-on: ubuntu-latest
 
     services:
@@ -31,9 +44,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint code
-        run: npm run lint
-
       - name: Run unit tests
         run: npm test
 
@@ -52,6 +62,12 @@ jobs:
           npm install cypress cypress-json-results
           npx cypress run
 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
 
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
@@ -59,6 +75,10 @@ jobs:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
 
+  slack-notification:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Slack Notification
         uses: act10ns/slack@v1
         with:
@@ -69,4 +89,3 @@ jobs:
             Job Name: ${{ github.job }}
             Workflow: ${{ github.workflow }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
