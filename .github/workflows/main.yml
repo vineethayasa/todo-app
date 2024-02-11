@@ -53,6 +53,12 @@ jobs:
           npm install cypress cypress-json-results
           npx cypress run
 
+       - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+
       - name: Slack Notification
         uses: act10ns/slack@v1
         with:
