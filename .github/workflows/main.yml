@@ -13,7 +13,7 @@ jobs:
       postgres:
         image: postgres:11.7
         env:
-          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           POSTGRES_USER: ${{ secrets.PG_USER }}
           POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
           POSTGRES_DB: ${{ secrets.PG_DATABASE }}
@@ -53,6 +53,18 @@ jobs:
           npm install cypress cypress-json-results
           npx cypress run
 
+      - name: Slack Notification on Failure
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ job.status }}
+          text: |
+            ${{ job.status }}: Something went wrong in the CI/CD pipeline on branch ${{ github.ref }}.
+            Commit: ${{ github.sha }}
+            Repository: ${{ github.repository }}
+          channel: '#github-notifications'
+        if: failure()
+
+
     # deploy:
     # runs-on: ubuntu-latest
 
@@ -69,14 +81,3 @@ jobs:
     #       # Add your deployment commands here
     #       # Example: scp or rsync to copy files to the server
     #       # Example: ssh to the server and restart the application
-
-        - name: Slack Notification on Failure
-        uses: rtCamp/action-slack-notify@v2
-        with:
-          status: ${{ job.status }}
-          text: |
-            ${{ job.status }}: Something went wrong in the CI/CD pipeline on branch ${{ github.ref }}.
-            Commit: ${{ github.sha }}
-            Repository: ${{ github.repository }}
-          channel: '#github-notifications'
-        if: failure()
