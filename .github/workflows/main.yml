@@ -56,8 +56,11 @@ jobs:
       - name: Slack Notification
         uses: act10ns/slack@v1
         with:
-          status: starting
+          status: ${{ job.status }}
           channel: '#github-notifications'
-          message: Starting Build and Deploy...
+          message: |
+              Build and Deploy Status: ${{ job.status }}
+              Job Name: ${{ github.job }}
+              Workflow: ${{ github.workflow }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
+        if: failure()
