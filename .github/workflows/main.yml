@@ -67,7 +67,7 @@ jobs:
             Build and Deploy Status: ${{ job.status }}
             Job Name: ${{ github.job }}
             Workflow: ${{ github.workflow }}
-            Commit: ${{ github.sha }}
+            Commit Message: ${{ github.event.head_commit.message }}
             Branch: ${{ github.ref }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
