@@ -1,14 +1,25 @@
-name: L5 solution
+name: CI/CD Pipeline
 
-on: push
-
-env:
-  PG_DATABASE: ${{ secrets.PG_DATABASE }}
-  PG_USER: ${{ secrets.PG_USER }}
-  PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  run-tests:
+  validate-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+  build-and-test:
     runs-on: ubuntu-latest
 
     services:
@@ -27,20 +38,11 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Check out repository code
+      - name: Checkout repository code
         uses: actions/checkout@v3
 
-      - name: Run the app
-        id: run-app
-        run: |
-          npm ci
-          npx sequelize-cli db:drop
-          npx sequelize-cli db:create
-          npx sequelize-cli db:migrate
-          PORT=3000 npm start &
-          sleep 5
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run integration tests
-        run: |
-          npm install cypress cypress-json-results
-          npx cypress run
+      - name: Run tests
+        run: npm test
