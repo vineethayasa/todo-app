@@ -53,7 +53,7 @@ jobs:
           npm install cypress cypress-json-results
           npx cypress run
 
-       - name: Deploy to production
+      - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.SERVICE_ID }}
@@ -65,8 +65,8 @@ jobs:
           status: ${{ job.status }}
           channel: '#github-notifications'
           message: |
-              Build and Deploy Status: ${{ job.status }}
-              Job Name: ${{ github.job }}
-              Workflow: ${{ github.workflow }}
+            Build and Deploy Status: ${{ job.status }}
+            Job Name: ${{ github.job }}
+            Workflow: ${{ github.workflow }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
