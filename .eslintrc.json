@@ -4,7 +4,9 @@
     "commonjs": true,
     "es2021": true
   },
-  "extends": "google",
+  "extends": [
+    "google",
+    "@ljharb/eslint-config"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"

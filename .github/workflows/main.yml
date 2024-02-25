@@ -77,7 +77,7 @@ jobs:
         uses: act10ns/slack@v1
         with:
           status: ${{ job.status }}
-          channel: '#github-notifications'
+          channel: "#github-notifications"
           message: |
             Build and Deploy Status: ${{ job.status }}
             Job Name: ${{ github.job }}
@@ -85,4 +85,4 @@ jobs:
             Commit Message: ${{ github.event.head_commit.message }}
             Branch: ${{ github.ref }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()  # Send notification only on job failure
+        if: failure() # Send notification only on job failure
