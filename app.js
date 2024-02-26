@@ -14,7 +14,7 @@ const connectEnsureLogin = require('connect-ensure-login');
 const session = require('express-session');
 const LocalStrategy = require('passport-local');
 
-const bcyrpt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const flash = require('connect-flash');
@@ -36,7 +36,7 @@ app.use(
     session({
       secret: 'this is my secret-258963147536214',
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie: {
         maxAge: 24 * 60 * 60 * 1000,
       },
@@ -45,7 +45,9 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use((request, response, next) => {
+  console.log('Middleware: Request received');
   response.locals.messages = request.flash();
   next();
 });
@@ -59,7 +61,7 @@ passport.use(
         (username, password, done) => {
           User.findOne({where: {email: username}})
               .then(async (user) => {
-                const result = await bcyrpt.compare(password, user.password);
+                const result = await bcrypt.compare(password, user.password);
                 if (result) {
                   return done(null, user);
                 } else {
@@ -74,7 +76,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log('Serializing user in session', user.id);
+  console.log(`[Worker ${process.pid}] Serializing user in session ${user.id}`);
   done(null, user.id);
 });
 
@@ -170,7 +172,7 @@ app.post('/users', async (request, response) => {
     request.flash('error', 'Password cannot be empty');
     return response.redirect('/signup');
   }
-  const hashedPwd = await bcyrpt.hash(request.body.password, saltRounds);
+  const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
   try {
     const user = await User.create({
