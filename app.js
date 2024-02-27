@@ -17,6 +17,8 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+require('dotenv').config();
+
 const flash = require('connect-flash');
 
 app.use(express.urlencoded({extended: false}));
@@ -34,7 +36,7 @@ app.use(csrf('this_should_be_32_character_long', ['POST', 'PUT', 'DELETE']));
 
 app.use(
     session({
-      secret: 'this is my secret-258963147536214',
+      secret: process.env.SECRET_KEY,
       resave: false,
       saveUninitialized: true,
       cookie: {
