@@ -12,5 +12,5 @@ CMD node index.js
 FROM base as dev
 ENV NODE_ENV=development
 RUN npm install -g nodemon && npm install
-COPY / app
+COPY . /app  
 CMD npm run start
