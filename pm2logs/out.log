@@ -1,18 +1,14 @@
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: server listening at port - 3000
-2024-02-26 11:45 +05:30: Middleware: Request received
-2024-02-26 11:45 +05:30: Middleware: Request received
-2024-02-26 11:45 +05:30: Middleware: Request received
-2024-02-26 11:45 +05:30: Middleware: Request received
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."email" = 'vinnyvineetha518@gmail.com' LIMIT 1;
-2024-02-26 11:45 +05:30: [Worker 309186] Serializing user in session 1
-2024-02-26 11:45 +05:30: User {
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:36 +05:30: server listening at port - 3000
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."email" = 'vinnyvineetha518@gmail.com' LIMIT 1;
+2024-02-27 21:37 +05:30: [Worker 9000] Serializing user in session 1
+2024-02-27 21:37 +05:30: User {
   dataValues: {
     id: 1,
     firstName: 'Vineetha',
@@ -50,111 +46,9 @@
   },
   isNewRecord: false
 }
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 11:45 +05:30: Middleware: Request received
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" ORDER BY "Todo"."id" ASC;
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" < '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" > '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" = '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 11:45 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."completed" = true AND "Todo"."userId" = 1 ORDER BY "Todo"."id" ASC;
-2024-02-26 11:49 +05:30: Middleware: Request received
-2024-02-26 11:49 +05:30: Middleware: Request received
-2024-02-26 11:49 +05:30: Middleware: Request received
-2024-02-26 13:15 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:16 +05:30: server listening at port - 3000
-2024-02-26 13:27 +05:30: Middleware: Request received
-2024-02-26 13:30 +05:30: Middleware: Request received
-2024-02-26 13:30 +05:30: Middleware: Request received
-2024-02-26 13:30 +05:30: Middleware: Request received
-2024-02-26 13:30 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."email" = 'vinnyvineetha518@gmail.com' LIMIT 1;
-2024-02-26 13:34 +05:30: [Worker 8353] Serializing user in session 1
-2024-02-26 13:34 +05:30: User {
-  dataValues: {
-    id: 1,
-    firstName: 'Vineetha',
-    lastName: 'Reddy',
-    email: 'vinnyvineetha518@gmail.com',
-    password: '$2b$10$ZdjefTtQ3r0tJtKwRNURV.yEqdWNomzAMS2OzMDm5qH8s1KPpE/ni',
-    createdAt: 2024-02-11T04:33:12.335Z,
-    updatedAt: 2024-02-11T04:33:12.335Z
-  },
-  _previousDataValues: {
-    id: 1,
-    firstName: 'Vineetha',
-    lastName: 'Reddy',
-    email: 'vinnyvineetha518@gmail.com',
-    password: '$2b$10$ZdjefTtQ3r0tJtKwRNURV.yEqdWNomzAMS2OzMDm5qH8s1KPpE/ni',
-    createdAt: 2024-02-11T04:33:12.335Z,
-    updatedAt: 2024-02-11T04:33:12.335Z
-  },
-  uniqno: 1,
-  _changed: Set(0) {},
-  _options: {
-    isNewRecord: false,
-    _schema: null,
-    _schemaDelimiter: '',
-    raw: true,
-    attributes: [
-      'id',
-      'firstName',
-      'lastName',
-      'email',
-      'password',
-      'createdAt',
-      'updatedAt'
-    ]
-  },
-  isNewRecord: false
-}
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" < '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" > '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" = '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."completed" = true AND "Todo"."userId" = 1 ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: We have to delete a todo with ID: 1
-2024-02-26 13:34 +05:30: Executing (default): DELETE FROM "Todos" WHERE "id" = '1' AND "userId" = 1
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" < '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" > '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" = '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."completed" = true AND "Todo"."userId" = 1 ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: We have to delete a todo with ID: 2
-2024-02-26 13:34 +05:30: Executing (default): DELETE FROM "Todos" WHERE "id" = '2' AND "userId" = 1
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
-2024-02-26 13:34 +05:30: Middleware: Request received
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" < '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" > '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" = '2024-02-26' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
-2024-02-26 13:34 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."completed" = true AND "Todo"."userId" = 1 ORDER BY "Todo"."id" ASC;
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: Middleware: Request received
-2024-02-26 14:04 +05:30: Middleware: Request received
-2024-02-26 14:04 +05:30: server listening at port - 3000
-2024-02-26 14:04 +05:30: Middleware: Request received
-2024-02-26 14:04 +05:30: Middleware: Request received
-2024-02-26 14:04 +05:30: Middleware: Request received
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "firstName", "lastName", "email", "password", "createdAt", "updatedAt" FROM "Users" AS "User" WHERE "User"."id" = 1;
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" ORDER BY "Todo"."id" ASC;
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" < '2024-02-27' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" > '2024-02-27' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."dueDate" = '2024-02-27' AND "Todo"."userId" = 1 AND "Todo"."completed" = false ORDER BY "Todo"."id" ASC;
+2024-02-27 21:37 +05:30: Executing (default): SELECT "id", "title", "dueDate", "completed", "createdAt", "updatedAt", "userId" FROM "Todos" AS "Todo" WHERE "Todo"."completed" = true AND "Todo"."userId" = 1 ORDER BY "Todo"."id" ASC;

@@ -38,7 +38,7 @@ jobs:
 
       # Step to install project dependencies
       - name: Install dependencies
-        run: npm cidajh
+        run: npm ci
 
       # Step to lint the code
       - name: Lint code

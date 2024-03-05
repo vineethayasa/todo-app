@@ -49,7 +49,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((request, response, next) => {
-  console.log('Middleware: Request received');
   response.locals.messages = request.flash();
   next();
 });
