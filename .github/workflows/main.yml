@@ -1,20 +1,14 @@
-# CI/CD Pipeline Configuration
-
 name: CI/CD Pipeline
 
-# Trigger the workflow on every push to the 'main' branch
 on:
   push:
     branches:
       - main
 
-# Define the jobs for the workflow
 jobs:
-  # Job to build, test, deploy, and handle errors
-  ci-cd:
+  build_test_deploy:
     runs-on: ubuntu-latest
 
-    # Services needed for the job, in this case, a PostgreSQL database
     services:
       postgres:
         image: postgres:11.7
@@ -22,10 +16,6 @@ jobs:
           POSTGRES_USER: ${{ secrets.PG_USER }}
           POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
           POSTGRES_DB: ${{ secrets.PG_DATABASE }}
-          
-          DEV_USERNAME: ${{ secrets.PG_USER }}
-          DEV_PASSWORD: ${{ secrets.PG_PASSWORD }}
-          DEV_DATABASE: ${{ secrets.PG_DATABASE }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -34,23 +24,17 @@ jobs:
         ports:
           - 5432:5432
 
-    # Steps to be executed in the job
     steps:
-      # Step to checkout the repository code
       - name: Checkout repository code
         uses: actions/checkout@v3
 
-      # Step to install project dependencies
-      - name: Install dependencies
+      - name: Install project dependencies
         run: npm ci
 
-      # Step to run unit tests
       - name: Run unit tests
         run: npm test
 
-      # Step to run the application
-      - name: Run the app
-        id: run-app
+      - name: Run the application
         run: |
           npm install
           npx sequelize-cli db:drop
@@ -58,26 +42,54 @@ jobs:
           npx sequelize-cli db:migrate
           PORT=3000 npm start &
           sleep 5
-      # Step to run integration tests using Cypress
-      - name: Run integration tests
+
+      - name: Run integration tests using Cypress
         run: |
           npm install cypress cypress-json-results
           npx cypress run
 
-      # Dockerize the application    
-      - name: Dockerize the application
-        run: |
-          docker-compose up -d  
+  dockerize:
+    runs-on: ubuntu-latest
 
-      # Step to deploy to production using Render
-      - name: Deploy to production
+    needs: build_test_deploy
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Dockerize the application
+        env:
+          DEV_USERNAME: ${{ secrets.PG_USER }}
+          DEV_PASSWORD: ${{ secrets.PG_PASSWORD }}
+          DEV_DATABASE: ${{ secrets.PG_DATABASE }}
+        run: |
+          docker-compose up -d
+
+  deploy_to_production:
+    runs-on: ubuntu-latest
+
+    needs: dockerize
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Deploy to production using Render
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
 
-      # Step to send Slack notification on failure
-      - name: Slack Notification
+  slack_notification:
+    runs-on: ubuntu-latest
+
+    needs: [build_test_deploy, dockerize, deploy_to_production]
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Send Slack notification on failure
         uses: act10ns/slack@v1
         with:
           status: ${{ job.status }}
