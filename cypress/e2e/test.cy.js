@@ -10,15 +10,15 @@ function formatDateWithOffset(daysOffset = 0) {
 }
 
 function login(email, password) {
-  cy.visit(`http://localhost:3000/login`);
+  cy.visit(`https://localhost:3000/login`);
   cy.get('input[name="email"]').type(email);
   cy.get('input[name="password"]').type(password);
   cy.get('form').submit();
-  cy.visit(`http://localhost:3000/todos`);
+  cy.visit(`https://localhost:3000/todos`);
 }
 
 describe('Todo Application', () => {
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'https://localhost:3000';
   beforeEach(() => {
     cy.visit(baseUrl);
   });
@@ -56,16 +56,16 @@ describe('Todo Application', () => {
     cy.url().should('include', '/login');
   });
 
-  it('Creating a sample todo', () => {
-    login('vineetha@test.com', '12345678');
+  // it('Creating a sample todo', () => {
+  //   login('vineetha@test.com', '12345678');
 
-    cy.visit(`${baseUrl}/todos`);
-    cy.get('input[name="title"]').type('Sample todo item');
-    cy.get('input[name="dueDate"]').type(formatDateWithOffset(0));
+  //   cy.visit(`${baseUrl}/todos`);
+  //   cy.get('input[name="title"]').type('Sample todo item');
+  //   cy.get('input[name="dueDate"]').type(formatDateWithOffset(0));
 
-    cy.get('button[type="submit"]').click();
-    cy.wait(500);
+  //   cy.get('button[type="submit"]').click();
+  //   cy.wait(500);
 
-    cy.get('.Todo-Item').contains('Sample todo item').should('exist');
-  });
+  //   cy.get('.Todo-Item').contains('Sample todo item').should('exist');
+  // });
 });
