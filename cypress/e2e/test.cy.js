@@ -10,15 +10,15 @@ function formatDateWithOffset(daysOffset = 0) {
 }
 
 function login(email, password) {
-  cy.visit(`https://localhost:3000/login`);
+  cy.visit(`http://localhost:3000/login`);
   cy.get('input[name="email"]').type(email);
   cy.get('input[name="password"]').type(password);
   cy.get('form').submit();
-  cy.visit(`https://localhost:3000/todos`);
+  cy.visit(`http://localhost:3000/todos`);
 }
 
 describe('Todo Application', () => {
-  const baseUrl = 'https://localhost:3000';
+  const baseUrl = 'http://localhost:3000';
   beforeEach(() => {
     cy.visit(baseUrl);
   });
