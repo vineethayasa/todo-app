@@ -122,4 +122,4 @@ jobs:
             Commit Message: ${{ github.event.head_commit.message }}
             Branch: ${{ github.ref }}
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure() # Sends notification only on job failure
+        if: failure() 
