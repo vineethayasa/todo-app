@@ -5,16 +5,18 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <meta name="csrf-token" content="<%= csrfToken %>">
         <link href="./css/styles.css" rel="stylesheet">
-        <title>Todo App</title>
+        <title><%= i18next.t('Todo Application') %> </title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
        <div class= "grid  grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include("header.ejs") %> 
-            <p class="py-2">Welcome to the To-Do Manager</p>
-            <p class="py-2">New User? <a href="/signup" class="text-green-600"> Sign-up now </a> </p>
-            <p class="py-2">Existing User? <a href="/login" class="text-green-600">Sign-in</a></p>            
+            <div class="ml-20 mt-4">
+                <p class="py-2"><%= i18next.t('welcomeMessage') %></p>
+            <p class="py-2"><%= i18next.t('newUserPrompt') %> <a href="/signup" class="text-green-600"> <%= i18next.t('signUpButton') %> </a> </p>
+            <p class="py-2"><%= i18next.t('existingUserPrompt') %><a href="/login" class="text-green-600"> <%= i18next.t('signInButton') %> </a></p>
+            </div>            
         </div>
        </div>
     </body>

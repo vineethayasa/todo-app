@@ -16,13 +16,17 @@ const LocalStrategy = require('passport-local');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const path = require('path');
+
+const i18next = require('./i18n');
+const middleware = require('i18next-http-middleware');
+app.use(middleware.handle(i18next));
 
 require('dotenv').config();
 
 const flash = require('connect-flash');
 
 app.use(express.urlencoded({extended: false}));
-const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -66,11 +70,11 @@ passport.use(
                 if (result) {
                   return done(null, user);
                 } else {
-                  return done(null, false, {message: 'Invalid Password'});
+                  return done(null, false, {message: i18next.t('invalidPassword')});
                 }
               })
               .catch((error) => {
-                return done(null, false, {message: 'Invalid user credentials'});
+                return done(null, false, {message: i18next.t('invalidCredentials')});
               });
         },
     ),
@@ -92,10 +96,12 @@ passport.deserializeUser((id, done) => {
 });
 
 app.set('view engine', 'ejs');
+
 app.get('/', async (request, response) => {
   response.render('index', {
-    title: 'Todo Application',
+    title: i18next.t('Todo Application'),
     csrfToken: request.csrfToken(),
+    i18next: i18next,
   });
 });
 
@@ -117,6 +123,7 @@ app.get(
           dueToday,
           csrfToken: request.csrfToken(),
           completedItems,
+          i18next: i18next,
         });
       } else {
         response.json({overdue, dueLater, dueToday, completedItems});
@@ -128,14 +135,23 @@ app.get('/signup', (request, response) => {
   response.render('signup', {
     title: 'Signup',
     csrfToken: request.csrfToken(),
+    i18next: i18next,
   });
 });
 
 app.get('/login', (request, response) => {
   response.render('login', {
-    title: 'Login',
+    title: i18next.t('login'),
     csrfToken: request.csrfToken(),
+    i18next: i18next,
   });
+});
+
+app.post('/toggle-lang', (req, res) => {
+  const currentLang = i18next.language;
+  const newLang = currentLang === 'en' ? 'te' : 'en';
+  i18next.changeLanguage(newLang);
+  res.redirect(req.get('referer') || '/');
 });
 
 app.post(
@@ -161,20 +177,19 @@ app.get('/signout', (request, response, next) => {
 
 app.post('/users', async (request, response) => {
   if (!request.body.firstName) {
-    request.flash('error', 'First Name cannot be empty');
+    request.flash('error', i18next.t('firstNameEmpty'));
     return response.redirect('/signup');
   }
   if (!request.body.email) {
-    request.flash('error', 'Email cannot be empty');
+    request.flash('error', i18next.t('emailEmpty'));
     return response.redirect('/signup');
   }
 
   if (!request.body.password) {
-    request.flash('error', 'Password cannot be empty');
+    request.flash('error', i18next.t('passwordEmpty'));
     return response.redirect('/signup');
   }
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedPwd);
   try {
     const user = await User.create({
       firstName: request.body.firstName,
@@ -200,16 +215,14 @@ app.post(
     '/todos',
     connectEnsureLogin.ensureLoggedIn(),
     async (request, response) => {
-      console.log('Creating a todo', request.body);
       if (!request.body.title.length) {
-        request.flash('error', 'Title cannot be empty');
+        request.flash('error', i18next.t('titleEmpty'));
         return response.redirect('/todos');
       }
       if (!request.body.dueDate.length) {
-        request.flash('error', 'Due date cannot be empty');
+        request.flash('error', i18next.t('dueDateEmpty'));
         return response.redirect('/todos');
       }
-      console.log('creating new todo', request.body);
       try {
         const todo = await Todo.addTodo({
           title: request.body.title,
@@ -258,4 +271,3 @@ app.delete(
 );
 
 module.exports = app;
-//
