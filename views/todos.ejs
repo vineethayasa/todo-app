@@ -50,22 +50,25 @@
        <div class= "grid  grid-cols-6">
         <div class="col-start-3 col-span-2">          
             <%- include("header.ejs") %> 
-            <a href="/signout" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-              <%= i18next.t('signout') %>
-            </a>            
+            <div class="flex items-center justify-between mb-4">
+              <h1><strong>Date: </strong> <%= formattedDate %> <strong>  Time: </strong><%= formattedTime %></h1>
+              <a href="/signout" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <%= i18next.t('signout') %>
+              </a>
+            </div>
             <form action="/todos" method="post">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div class="flex gap-2 py-4">
-                    <div class="flex-auto">
-                        <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
-                    </div>
-                    <div class="flex-auto">
-                        <input type="date" name="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4 "/>
-                    </div>
-                    <div class="flex-none">
-                        <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
-                    </div>  
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <div class="flex gap-2 py-4">
+                <div class="flex-auto">
+                  <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
                 </div>
+                <div class="flex-auto">
+                  <input type="date" name="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4 "/>
+                </div>
+                <div class="flex-none">
+                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
+                </div>
+              </div>
             </form>
             <%- include('todo.ejs', {title: i18next.t('overdue'), data: overdue}) %>
             <%- include('todo.ejs', {title: i18next.t('dueToday'), data: dueToday}) %>
@@ -81,5 +84,6 @@
             <% } %>
         </div>
        </div>
+       <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
     </body>
 </html>

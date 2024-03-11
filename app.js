@@ -115,8 +115,30 @@ app.get(
       const dueLater = await Todo.dueLater(loggedInUser);
       const dueToday = await Todo.dueToday(loggedInUser);
       const completedItems = await Todo.completedItems(loggedInUser);
-      if (request.accepts('html')) {
-        response.render('todos', {
+      const userLocale = i18next.language;
+
+      const date = new Date();
+
+      // Date formatter
+      const dateFormatter = new Intl.DateTimeFormat(userLocale, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      // Time formatter
+      const timeFormatter = new Intl.DateTimeFormat(userLocale, {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      });
+
+      // Format the date and time separately
+      const formattedDate = dateFormatter.format(date);
+      const formattedTime = timeFormatter.format(date);
+
+      if (request.accepts("html")) {
+        response.render("todos", {
           allTodos,
           overdue,
           dueLater,
@@ -124,9 +146,12 @@ app.get(
           csrfToken: request.csrfToken(),
           completedItems,
           i18next: i18next,
+          userLocale,
+          formattedDate,
+          formattedTime
         });
       } else {
-        response.json({overdue, dueLater, dueToday, completedItems});
+        response.json({ overdue, dueLater, dueToday, completedItems });
       }
     },
 );
@@ -148,11 +173,16 @@ app.get('/login', (request, response) => {
 });
 
 app.post('/toggle-lang', (req, res) => {
-  const currentLang = i18next.language;
-  const newLang = currentLang === 'en' ? 'te' : 'en';
-  i18next.changeLanguage(newLang);
+  const requestedLang = req.body.language;
+  const supportedLanguages = ['en', 'te', 'hi','de','ja','fr'];
+
+  if (supportedLanguages.includes(requestedLang)) {
+    i18next.changeLanguage(requestedLang);
+  }
+
   res.redirect(req.get('referer') || '/');
 });
+
 
 app.post(
     '/session',

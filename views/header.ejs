@@ -3,10 +3,41 @@
     <%= i18next.t('app_title') %>
   </h1>
 
-  <form action="/toggle-lang" method="post" class="mb-4">
+  <form id="languageForm" action="/toggle-lang" method="post" class="inline-block relative">
+
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-      <%= i18next.t('toggle_language') %>
-    </button>
+
+    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-md px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button"><%= i18next.t('toggle_language') %> <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+      </svg>
+      </button>
+      
+      <!-- Dropdown menu -->
+      <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+              <button class="block px-4 py-2 text-center" type="submit" name="language" value="en"><%= i18next.t('english') %></button>
+            </li>
+            <li>
+              <button class="block px-4 py-2" type="submit" name="language" value="te"><%= i18next.t('telugu') %></button>
+            </li>
+            <li>
+              <button class="block px-4 py-2" type="submit" name="language" value="hi"><%= i18next.t('hindi') %></button>
+            </li>
+            <li>
+              <button class="block px-4 py-2" type="submit" name="language" value="ja"><%= i18next.t('japanese') %></button>
+            </li>
+            <li>
+              <button class="block px-4 py-2" type="submit" name="language" value="fr"><%= i18next.t('french') %></button>
+            </li>
+            <li>
+              <button class="block px-4 py-2" type="submit" name="language" value="de"><%= i18next.t('german') %></button>
+            </li>
+          </ul>
+      </div>
+
   </form>
 </div>
+
+
+  

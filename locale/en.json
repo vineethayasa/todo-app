@@ -25,8 +25,14 @@
   "dueDateEmpty": "Due date cannot be empty",
   "Todo Application": "Todo Application",
   "app_title": "This is my Todo Application",
-  "toggle_language": "Toggle Language",
+  "toggle_language": "Select Language",
   "add": "Add",
   "signout": "Signout",
-  "whats_next": "What's next"
+  "whats_next": "What's next",
+  "english": "English",
+  "telugu": "Telugu",
+  "japanese": "Japanese",
+  "french": "French",
+  "german": "German",
+  "hindi": "Hindi"
 }
