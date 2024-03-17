@@ -133,7 +133,6 @@ app.get(
         second: "numeric",
       });
 
-      // Format the date and time separately
       const formattedDate = dateFormatter.format(date);
       const formattedTime = timeFormatter.format(date);
 
@@ -148,7 +147,7 @@ app.get(
           i18next: i18next,
           userLocale,
           formattedDate,
-          formattedTime
+          formattedTime,
         });
       } else {
         response.json({ overdue, dueLater, dueToday, completedItems });
