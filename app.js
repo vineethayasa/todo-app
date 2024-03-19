@@ -57,27 +57,54 @@ app.use((request, response, next) => {
   next();
 });
 
+//level 9
+
+const Sentry = require("@sentry/node");
+const { nodeProfilingIntegration } = require("@sentry/profiling-node");
+
+Sentry.init({
+  dsn: process.env.DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    nodeProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
+
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+app.use(Sentry.Handlers.errorHandler());
+
+
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+  Sentry.captureException(err);
+  next(err);
+});
+
 passport.use(
-    new LocalStrategy(
-        {
-          usernameField: 'email',
-          password: 'password',
-        },
-        (username, password, done) => {
-          User.findOne({where: {email: username}})
-              .then(async (user) => {
-                const result = await bcrypt.compare(password, user.password);
-                if (result) {
-                  return done(null, user);
-                } else {
-                  return done(null, false, {message: i18next.t('invalidPassword')});
-                }
-              })
-              .catch((error) => {
-                return done(null, false, {message: i18next.t('invalidCredentials')});
-              });
-        },
-    ),
+  new LocalStrategy(
+      {
+        usernameField: 'email',
+        password: 'password',
+      },
+      (username, password, done) => {
+        User.findOne({where: {email: username}})
+            .then(async (user) => {
+              const result = await bcrypt.compare(password, user.password);
+              if (result) {
+                return done(null, user);
+              } else {
+                return done(null, false, {message: i18next.t('invalidPassword')});
+              }
+            })
+            .catch((error) => {
+              return done(null, false, {message: i18next.t('invalidCredentials')});
+            });
+      },
+  ),
 );
 
 passport.serializeUser((user, done) => {
@@ -91,24 +118,33 @@ passport.deserializeUser((id, done) => {
         done(null, user);
       })
       .catch((error) => {
+        Sentry.captureException(error);
         done(error, null);
       });
 });
 
+
 app.set('view engine', 'ejs');
 
 app.get('/', async (request, response) => {
-  response.render('index', {
-    title: i18next.t('Todo Application'),
-    csrfToken: request.csrfToken(),
-    i18next: i18next,
-  });
+  try {
+    const title = i18next.t('Todo Application');
+    const csrfToken = await request.csrfToken();
+    response.render('index', {
+      title: title,
+      csrfToken: csrfToken,
+      i18next: i18next,
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+  }
 });
 
 app.get(
     '/todos',
     connectEnsureLogin.ensureLoggedIn(),
     async (request, response) => {
+      try {
       const loggedInUser = request.user.id;
       const allTodos = await Todo.getTodos();
       const overdue = await Todo.overdue(loggedInUser);
@@ -152,34 +188,50 @@ app.get(
       } else {
         response.json({ overdue, dueLater, dueToday, completedItems });
       }
+      } catch (error) {
+        Sentry.captureException(error);
+      }
     },
 );
 
 app.get('/signup', (request, response) => {
-  response.render('signup', {
-    title: 'Signup',
-    csrfToken: request.csrfToken(),
-    i18next: i18next,
-  });
+  try {
+    response.render('signup', {
+      title: 'Signup',
+      csrfToken: request.csrfToken(),
+      i18next: i18next,
+    });
+  } catch (error) {
+      Sentry.captureException(error);
+  }
 });
 
 app.get('/login', (request, response) => {
-  response.render('login', {
-    title: i18next.t('login'),
-    csrfToken: request.csrfToken(),
-    i18next: i18next,
-  });
+  try {
+    // const a = thisisanerror; 
+    response.render('login', {
+      title: i18next.t('login'),
+      csrfToken: request.csrfToken(),
+      i18next: i18next,
+    });
+  } catch (error) {
+      Sentry.captureException(error);
+  }
 });
 
 app.post('/toggle-lang', (req, res) => {
-  const requestedLang = req.body.language;
-  const supportedLanguages = ['en', 'te', 'hi','de','ja','fr'];
+  try {
+    const requestedLang = req.body.language;
+    const supportedLanguages = ["en", "te", "hi", "de", "ja", "fr"];
 
-  if (supportedLanguages.includes(requestedLang)) {
-    i18next.changeLanguage(requestedLang);
+    if (supportedLanguages.includes(requestedLang)) {
+      i18next.changeLanguage(requestedLang);
+    }
+
+    res.redirect(req.get("referer") || "/");
+  } catch (error) {
+    Sentry.captureException(error);
   }
-
-  res.redirect(req.get('referer') || '/');
 });
 
 
@@ -262,6 +314,7 @@ app.post(
         return response.redirect('/todos');
       } catch (error) {
         console.log(error);
+        Sentry.captureException(error); 
         return response.status(422).json(error);
       }
     },
@@ -280,6 +333,7 @@ app.put(
         return response.json(updatedtodo);
       } catch (error) {
         console.log(error);
+        Sentry.captureException(error); 
         return response.status(422).json(error);
       }
     },
@@ -294,6 +348,7 @@ app.delete(
         await Todo.remove(request.params.id, request.user.id);
         return response.json({success: true});
       } catch (error) {
+        Sentry.captureException(error); 
         return response.status(422).json(error);
       }
     },
