@@ -73,9 +73,9 @@ Sentry.init({
   profilesSampleRate: 1.0,
 });
 
-app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.tracingHandler());
-app.use(Sentry.Handlers.errorHandler());
+// app.use(Sentry.Handlers.requestHandler());
+// app.use(Sentry.Handlers.tracingHandler());
+// app.use(Sentry.Handlers.errorHandler());
 
 
 // Optional fallthrough error handler
@@ -208,7 +208,6 @@ app.get('/signup', (request, response) => {
 
 app.get('/login', (request, response) => {
   try {
-    // const a = thisisanerror; 
     response.render('login', {
       title: i18next.t('login'),
       csrfToken: request.csrfToken(),
@@ -221,19 +220,24 @@ app.get('/login', (request, response) => {
 
 app.post('/toggle-lang', (req, res) => {
   try {
+    console.log("Current Language",i18next.language);
+
     const requestedLang = req.body.language;
+    console.log("User request Language",requestedLang);
+
     const supportedLanguages = ["en", "te", "hi", "de", "ja", "fr"];
 
     if (supportedLanguages.includes(requestedLang)) {
       i18next.changeLanguage(requestedLang);
     }
 
+    console.log("Updated Language",i18next.language);
+
     res.redirect(req.get("referer") || "/");
   } catch (error) {
     Sentry.captureException(error);
   }
 });
-
 
 app.post(
     '/session',
