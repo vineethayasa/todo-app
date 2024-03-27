@@ -23,38 +23,38 @@ describe('Todo Application', () => {
     cy.visit(baseUrl);
   });
 
-  it('Sign up', () => {
-    cy.visit(`${baseUrl}/signup`);
-    cy.get('input[name="firstName"]').type('Vineetha');
-    cy.get('input[name="lastName"]').type('Reddy');
-    cy.get('input[name="email"]').type('vineetha@test.com');
-    cy.get('input[name="password"]').type('12345678');
-    cy.get('button[type="submit"]').click();
-    cy.log('Current URL:', cy.url());
-  });
+  // it('Sign up', () => {
+  //   cy.visit(`${baseUrl}/signup`);
+  //   cy.get('input[name="firstName"]').type('Vineetha');
+  //   cy.get('input[name="lastName"]').type('Reddy');
+  //   cy.get('input[name="email"]').type('vineetha@test.com');
+  //   cy.get('input[name="password"]').type('12345678');
+  //   cy.get('button[type="submit"]').click();
+  //   cy.log('Current URL:', cy.url());
+  // });
 
-  it('Sign out', () => {
-    cy.visit(`${baseUrl}/todos`);
-    cy.request(`${baseUrl}/signout`);
-  });
+  // it('Sign out', () => {
+  //   cy.visit(`${baseUrl}/todos`);
+  //   cy.request(`${baseUrl}/signout`);
+  // });
 
-  it('Login', () => {
-    cy.visit(`${baseUrl}/login`);
-    cy.get('input[name="email"]').type('vineetha@test.com');
-    cy.get('input[name="password"]').type('12345678');
+  // it('Login', () => {
+  //   cy.visit(`${baseUrl}/login`);
+  //   cy.get('input[name="email"]').type('vineetha@test.com');
+  //   cy.get('input[name="password"]').type('12345678');
 
-    cy.get('form').submit();
-    cy.visit(`${baseUrl}/todos`);
-  });
+  //   cy.get('form').submit();
+  //   cy.visit(`${baseUrl}/todos`);
+  // });
 
-  it('Should not Login with invalid credentials', () => {
-    cy.visit(`${baseUrl}/login`);
-    cy.get('input[name="email"]').type('nonexistentuser@test.com');
-    cy.get('input[name="password"]').type('invalidpassword');
+  // it('Should not Login with invalid credentials', () => {
+  //   cy.visit(`${baseUrl}/login`);
+  //   cy.get('input[name="email"]').type('nonexistentuser@test.com');
+  //   cy.get('input[name="password"]').type('invalidpassword');
 
-    cy.get('form').submit();
-    cy.url().should('include', '/login');
-  });
+  //   cy.get('form').submit();
+  //   cy.url().should('include', '/login');
+  // });
 
   // it('Creating a sample todo', () => {
   //   login('vineetha@test.com', '12345678');

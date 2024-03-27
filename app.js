@@ -73,12 +73,6 @@ Sentry.init({
   profilesSampleRate: 1.0,
 });
 
-// app.use(Sentry.Handlers.requestHandler());
-// app.use(Sentry.Handlers.tracingHandler());
-// app.use(Sentry.Handlers.errorHandler());
-
-
-// Optional fallthrough error handler
 app.use(function onError(err, req, res, next) {
   Sentry.captureException(err);
   next(err);
@@ -125,6 +119,38 @@ passport.deserializeUser((id, done) => {
 
 
 app.set('view engine', 'ejs');
+
+//lvl 10
+
+const OpenAI = require("openai"); 
+
+const openai = new OpenAI({
+apikey: process.env["OPENAI_API_KEY"], 
+});
+
+async function askChatGPT(question) {
+  try {
+    const chatCompletion = await openai.chat.completions.create({ 
+       messages: [{ role: "user", content: question}],
+       model: "gpt-3.5-turbo",
+    });
+    
+    return chatCompletion.choices[0].message.content;
+  } catch (error) {
+    console.error("Error making a query to ChatGPT:", error);
+    return null;
+  }
+}
+
+async function addTodoWithChatGPT (question){
+  const suggestion = await askChatGPT (question);
+  if (suggestion) {
+    console.log("Response from ChatGPT:", suggestion);
+  } else {
+    console.log("No response received from ChatGPT.");
+  }
+}  
+
 
 app.get('/', async (request, response) => {
   try {
@@ -231,12 +257,19 @@ app.post('/toggle-lang', (req, res) => {
       i18next.changeLanguage(requestedLang);
     }
 
-    console.log("Updated Language",i18next.language);
+    setTimeout(() => {
+      console.log("Updated Language", i18next.language);
+    }, 500);
 
-    res.redirect(req.get("referer") || "/");
+    res.redirect(req.get("referer") || "/");  
   } catch (error) {
     Sentry.captureException(error);
   }
+});
+
+app.post('/add-natural',(req,res) => {
+   addTodoWithChatGPT(req.body.title);
+  res.redirect(req.get("referer") || "/");  
 });
 
 app.post(

@@ -12,7 +12,7 @@
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content");
           const updateTodo = (id) => {
-            const bool = document.querySelector(`#todo-checkbox-${ib}`).checked;
+            const bool = document.querySelector(`#todo-checkbox-${id}`).checked;
             console.log(bool);
             fetch(`/todos/${id}`, {
               method: "put",
@@ -69,6 +69,15 @@
                   <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
                 </div>
               </div>
+            </form>
+            <form action="/add-natural" method="post">
+                <div class="flex-auto">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
+                </div>
+                <div class="flex-none">
+                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
+                </div>
             </form>
             <%- include('todo.ejs', {title: i18next.t('overdue'), data: overdue}) %>
             <%- include('todo.ejs', {title: i18next.t('dueToday'), data: dueToday}) %>
