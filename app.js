@@ -122,34 +122,34 @@ app.set('view engine', 'ejs');
 
 //lvl 10
 
-const OpenAI = require("openai"); 
+// const OpenAI = require("openai"); 
 
-const openai = new OpenAI({
-apikey: process.env["OPENAI_API_KEY"], 
-});
+// const openai = new OpenAI({
+// apikey: process.env["OPENAI_API_KEY"], 
+// });
 
-async function askChatGPT(question) {
-  try {
-    const chatCompletion = await openai.chat.completions.create({ 
-       messages: [{ role: "user", content: question}],
-       model: "gpt-3.5-turbo",
-    });
+// async function askChatGPT(question) {
+//   try {
+//     const chatCompletion = await openai.chat.completions.create({ 
+//        messages: [{ role: "user", content: question}],
+//        model: "gpt-3.5-turbo",
+//     });
     
-    return chatCompletion.choices[0].message.content;
-  } catch (error) {
-    console.error("Error making a query to ChatGPT:", error);
-    return null;
-  }
-}
+//     return chatCompletion.choices[0].message.content;
+//   } catch (error) {
+//     console.error("Error making a query to ChatGPT:", error);
+//     return null;
+//   }
+// }
 
-async function addTodoWithChatGPT (question){
-  const suggestion = await askChatGPT (question);
-  if (suggestion) {
-    console.log("Response from ChatGPT:", suggestion);
-  } else {
-    console.log("No response received from ChatGPT.");
-  }
-}  
+// async function addTodoWithChatGPT (question){
+//   const suggestion = await askChatGPT (question);
+//   if (suggestion) {
+//     console.log("Response from ChatGPT:", suggestion);
+//   } else {
+//     console.log("No response received from ChatGPT.");
+//   }
+// }  
 
 
 app.get('/', async (request, response) => {
