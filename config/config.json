@@ -3,21 +3,16 @@
     "username": "postgres",
     "password": "vineetha299",
     "database": "wd-todo-dev2",
-    "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "vineetha299",
     "database": "wd-todo-test2",
-    "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "vineetha_todo_bzty_user",
-    "password": "xxSmqbe62AQJckM0rkxJ5dahQLJ5aUo4",
-    "database": "vineetha_todo_bzty",
-    "host": "dpg-co3em60l5elc73dc2ud0-a",
+    "use_env_variable": "DATABASE_URL",
     "dialect": "postgres"
   }
 }
