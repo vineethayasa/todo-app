@@ -309,12 +309,14 @@ app.post('/users', async (request, response) => {
   }
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
+    console.log(User);
     const user = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
       password: hashedPwd,
     });
+    console.log(user);
     request.login(user, (err) => {
       if (err) {
         console.log(err);
