@@ -101,25 +101,25 @@ jobs:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
 
-  slack_notification:
-    runs-on: ubuntu-latest
+  # slack_notification:
+  #   runs-on: ubuntu-latest
 
-    # needs: [code_validation, dockerize, deployment]
+  #   needs: [code_validation, dockerize, deployment]
 
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout repository code
+  #       uses: actions/checkout@v3
 
-      - name: Send Slack notification on failure
-        uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status }}
-          channel: "#github-notifications"
-          message: |
-            Build and Deploy Status: ${{ job.status }}
-            Job Name: ${{ github.job }}
-            Workflow: ${{ github.workflow }}
-            Commit Message: ${{ github.event.head_commit.message }}
-            Branch: ${{ github.ref }}
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure() 
+  #     - name: Send Slack notification on failure
+  #       uses: act10ns/slack@v1
+  #       with:
+  #         status: ${{ job.status }}
+  #         channel: "#github-notifications"
+  #         message: |
+  #           Build and Deploy Status: ${{ job.status }}
+  #           Job Name: ${{ github.job }}
+  #           Workflow: ${{ github.workflow }}
+  #           Commit Message: ${{ github.event.head_commit.message }}
+  #           Branch: ${{ github.ref }}
+  #         webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #       if: failure() 
