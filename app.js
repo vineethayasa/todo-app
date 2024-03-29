@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const csrf = require('tiny-csrf');
 
-const {Todo, User} = require('./models');
+const {Todo, Usertodo} = require('./models');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.use(flash());
-const user = require('./models/user');
+const user = require('./models/usertodo');
 
 app.use(bodyParser.json());
 app.use(cookieParser('ssh!!!! some secret string'));
@@ -85,7 +85,7 @@ passport.use(
         password: 'password',
       },
       (username, password, done) => {
-        User.findOne({where: {email: username}})
+        Usertodo.findOne({where: {email: username}})
             .then(async (user) => {
               const result = await bcrypt.compare(password, user.password);
               if (result) {
@@ -107,7 +107,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findByPk(id)
+  Usertodo.findByPk(id)
       .then((user) => {
         done(null, user);
       })
@@ -309,7 +309,7 @@ app.post('/users', async (request, response) => {
   }
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
-    const user = await User.create({
+    const user = await Usertodo.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
