@@ -14,7 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "DATABASE_URL",
+    "username": "vineetha_todo_bzty_user",
+    "password": "xxSmqbe62AQJckM0rkxJ5dahQLJ5aUo4",
+    "database": "vineetha_todo_bzty",
+    "host": "dpg-co3em60l5elc73dc2ud0-a",
     "dialect": "postgres"
   }
 }
