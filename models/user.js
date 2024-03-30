@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
       });
     }
+    static addUser({ firstName, lastName, email, password }) {
+      return this.create({ firstName, lastName, email, password });
+    }
+    static async getUser(userId) {
+      return this.findByPk(userId);
+    }
   }
   User.init(
       {
