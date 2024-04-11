@@ -122,34 +122,87 @@ app.set('view engine', 'ejs');
 
 //lvl 10
 
-// const OpenAI = require("openai"); 
+const { GoogleGenerativeAI } = require('@google/generative-ai')
 
-// const openai = new OpenAI({
-// apikey: process.env["OPENAI_API_KEY"], 
-// });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
-// async function askChatGPT(question) {
-//   try {
-//     const chatCompletion = await openai.chat.completions.create({ 
-//        messages: [{ role: "user", content: question}],
-//        model: "gpt-3.5-turbo",
-//     });
+app.post('/add-natural', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
+  const prompt = req.body.title
+  console.log("original",prompt);
+  try {
+    const { title, dueDate } = await getTitleAndDateFromGemini(prompt)
+
+    await Todo.addTodo({
+      title,
+      dueDate,
+      completed: false,
+      userId: req.user.id,
+    })
     
-//     return chatCompletion.choices[0].message.content;
-//   } catch (error) {
-//     console.error("Error making a query to ChatGPT:", error);
-//     return null;
-//   }
-// }
+    return res.redirect('/todos')
+  } catch (error) {
+    console.error('Error adding todo with Gemini API:', error)
+    req.flash('error', 'Error adding todo with Gemini API: ' + error.message)
+    return res.redirect('/todos')
+  }
+})
 
-// async function addTodoWithChatGPT (question){
-//   const suggestion = await askChatGPT (question);
-//   if (suggestion) {
-//     console.log("Response from ChatGPT:", suggestion);
-//   } else {
-//     console.log("No response received from ChatGPT.");
-//   }
-// }  
+async function getTitleAndDateFromGemini (prompt) {
+  try {
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const systemPrompt = 
+      "You are assisting a user in managing their tasks within a to-do application. " +
+      "Users can input a sentence describing a task, potentially including a due date explicitly or implicitly (e.g., 'today', 'tomorrow'). "+
+      "Your task is to analyze the input sentence, extracting the task title and its due date if mentioned. "+
+      "If a due date is provided , include it in the output directly in the format YYYY-MM-DD ; "+
+      "otherwise, extract the task title and analyze its urgency to decide on a due date yourself. "+
+      `Make sure to use the current date ${currentDate} to compute any relative dates. `+
+      "Return the title and due date in the format 'Title : Due Date'. where duedate must and should be in the format YYYY-MM-DD"+
+      "The output format should be consistent, dont write Title followed by the actual title just directly give the title and due date sepearated by :"
+;
+    const suggestion = await askGemini(systemPrompt + ' ' + prompt)
+    console.log("search here",suggestion)
+
+    const [title, date] = suggestion.split(':').map(str => str.trim());
+  //   let title, date;
+
+  //   if (suggestion.includes("Title :")) {
+  //     [, title, date] = suggestion.match(/Title : (.*) Due Date : (.*)/);
+  // } else {
+  //     [title, date] = suggestion.split(':').map(str => str.trim());
+  // }
+    
+    console.log('Extracted title and date: ' + title + date)
+    if (!title || !date) {
+      throw new Error('Unable to extract the title and date from the suggestion.')
+    }
+
+    const dueDate = new Date(date)
+    if (isNaN(dueDate.getTime())) {
+      throw new Error('Invalid due date format.')
+    }
+
+    return { title, dueDate }
+  } catch (error) {
+    console.error('Error getting title and date from Gemini API:', error)
+    throw error
+  }
+}
+
+async function askGemini (prompt) {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const text = await response.text()
+    console.log('Input by user:', text)
+    return text
+  } catch (error) {
+    console.error('Error making a query to Gemini API:', error)
+    return null
+  }
+}
 
 
 app.get('/', async (request, response) => {
@@ -265,11 +318,6 @@ app.post('/toggle-lang', (req, res) => {
   } catch (error) {
     Sentry.captureException(error);
   }
-});
-
-app.post('/add-natural',(req,res) => {
-   addTodoWithChatGPT(req.body.title);
-  res.redirect(req.get("referer") || "/");  
 });
 
 app.post(

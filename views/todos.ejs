@@ -7,6 +7,7 @@
         <link href="./css/styles.css" rel="stylesheet">
         <title><%= i18next.t('Todo Application') %></title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1"></script>
         <script>
           var token = document
             .querySelector('meta[name="csrf-token"]')
@@ -24,9 +25,38 @@
             })
               .then((res) => {
                 if (res.ok) {
-                  window.location.reload();
-                }
-              })
+                  document.querySelector('.addhere').classList.add('blur-background');
+              const modalMarkup = `
+              <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg msg">
+                <p class="text-lg font-bold mb-2">Todo completed successfully!</p>
+              </div>
+              `;
+              document.body.insertAdjacentHTML('beforeend', modalMarkup);
+              
+              confetti({
+                particleCount: 50,
+                spread: 40,
+                origin: { y: 0.6 },
+              });
+              
+              setTimeout(function() {
+              const message = document.querySelector('.msg');
+               if (message) {
+                message.style.transition = 'opacity 1s ease';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                    document.querySelector('.addhere').classList.remove('blur-background');
+                }, 1000); 
+                  }
+              }, 1500);
+
+              setTimeout(function() {
+                window.location.reload();                
+              }, 3000);
+              
+            }
+          })
               .catch((err) => console.error(err));
           };
           function deleteTodo(id) {
@@ -45,9 +75,15 @@
               .catch((err) => console.error(err));
           }
         </script>
+        <style>
+          .blur-background {
+            filter: blur(3px);
+          }
+      </style>
     </head>
+
     <body>
-       <div class= "grid  grid-cols-6">
+       <div class= "grid  grid-cols-6 addhere">
         <div class="col-start-3 col-span-2">          
             <%- include("header.ejs") %> 
             <div class="flex items-center justify-between mb-4">
@@ -66,19 +102,21 @@
                   <input type="date" name="dueDate" id="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4 " />
                 </div>
                 <div class="flex-none">
-                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
+                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2"><%= i18next.t('add') %></button>
                 </div>
               </div>
             </form>
             <!-- <form action="/add-natural" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <div class="flex gap-2 py-4">
                 <div class="flex-auto">
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                   <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
                 </div>
                 <div class="flex-none">
                   <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
                 </div>
-            </form> -->
+              </div>
+          </form> -->
             <%- include('todo.ejs', {title: i18next.t('overdue'), data: overdue}) %>
             <%- include('todo.ejs', {title: i18next.t('dueToday'), data: dueToday}) %>
             <%- include('todo.ejs', {title: i18next.t('dueLater'), data: dueLater}) %>
