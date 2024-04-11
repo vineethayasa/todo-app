@@ -12,9 +12,11 @@
           var token = document
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content");
+            
           const updateTodo = (id) => {
             const bool = document.querySelector(`#todo-checkbox-${id}`).checked;
             console.log(bool);
+
             fetch(`/todos/${id}`, {
               method: "put",
               headers: { "Content-Type": "application/json" },
@@ -25,38 +27,42 @@
             })
               .then((res) => {
                 if (res.ok) {
-                  document.querySelector('.addhere').classList.add('blur-background');
-              const modalMarkup = `
-              <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg msg">
-                <p class="text-lg font-bold mb-2">Todo completed successfully!</p>
-              </div>
-              `;
-              document.body.insertAdjacentHTML('beforeend', modalMarkup);
-              
-              confetti({
-                particleCount: 50,
-                spread: 40,
-                origin: { y: 0.6 },
-              });
-              
-              setTimeout(function() {
-              const message = document.querySelector('.msg');
-               if (message) {
-                message.style.transition = 'opacity 1s ease';
-                message.style.opacity = '0';
-                setTimeout(function() {
-                    message.remove();
-                    document.querySelector('.addhere').classList.remove('blur-background');
-                }, 1000); 
-                  }
-              }, 1500);
+                  if (bool){
+                    document.querySelector('.addhere').classList.add('blur-background');
+                  const modalMarkup = `
+                  <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg msg">
+                    <p class="text-lg font-bold mb-2">Todo completed successfully!</p>
+                  </div>
+                  `;
+                  document.body.insertAdjacentHTML('beforeend', modalMarkup);
 
-              setTimeout(function() {
-                window.location.reload();                
-              }, 3000);
-              
-            }
-          })
+                  confetti({
+                    particleCount: 50,
+                    spread: 40,
+                    origin: { y: 0.6 },
+                  });
+
+                  setTimeout(function () {
+                    const message = document.querySelector('.msg');
+                    if (message) {
+                      message.style.transition = 'opacity 1s ease';
+                      message.style.opacity = '0';
+                      setTimeout(function () {
+                        message.remove();
+                        document.querySelector('.addhere').classList.remove('blur-background');
+                      }, 1000);
+                    }
+                  }, 1500);
+
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 3000);
+                  }
+                  else {
+                    window.location.reload();
+                  }
+                }
+              })
               .catch((err) => console.error(err));
           };
           function deleteTodo(id) {
