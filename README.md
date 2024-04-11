@@ -2,6 +2,8 @@
 
 The Todo App web application allows users to manage their tasks efficiently by creating, marking as complete, and deleting todos. Users can sign in or sign up to access the full features of the application.
 
+Explore the live demo of the project [here](https://todo-app-docker-hdh4.onrender.com/).
+
 ## **Technologies Used**
 
 - Frontend: HTML, CSS (Tailwind CSS), JavaScript
