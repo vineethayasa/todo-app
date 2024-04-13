@@ -161,16 +161,15 @@ async function getTitleAndDateFromGemini (prompt) {
       "The output format should be consistent, dont write Title followed by the actual title just directly give the title and due date sepearated by :"
 ;
     const suggestion = await askGemini(systemPrompt + ' ' + prompt)
-    console.log("search here",suggestion)
 
-    const [title, date] = suggestion.split(':').map(str => str.trim());
-  //   let title, date;
+    // const [title, date] = suggestion.split(':').map(str => str.trim());
+    let title, date;
 
-  //   if (suggestion.includes("Title :")) {
-  //     [, title, date] = suggestion.match(/Title : (.*) Due Date : (.*)/);
-  // } else {
-  //     [title, date] = suggestion.split(':').map(str => str.trim());
-  // }
+    if (suggestion.includes("Title :")) {
+      [, title, date] = suggestion.match(/Title : (.*) Due Date : (.*)/);
+  } else {
+      [title, date] = suggestion.split(':').map(str => str.trim());
+  }
     
     console.log('Extracted title and date: ' + title + date)
     if (!title || !date) {
@@ -203,7 +202,6 @@ async function askGemini (prompt) {
     return null
   }
 }
-
 
 app.get('/', async (request, response) => {
   try {
