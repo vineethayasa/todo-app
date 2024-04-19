@@ -501,24 +501,24 @@ app.delete(
     },
 );
 
-// a GET route to fetch todo details by ID
-app.get('/todo/:id', async (req, res) => {
-  const todoId = req.params.id;
-
-  try {
-    const todo = await Todo.findByPk(todoId);
-
-    if (!todo) {
-      return res.status(404).json({ message: 'To-do not found' });
+app.get(
+  "/edit_todo/:name/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const todo = await Todo.getTodoById(request.params.id);
+    if (todo.userId == request.user.id) {
+      const todo_name = todo.todo_name;
+      const todo_id = request.params.id;
+      response.render("edit_todo", {
+        todo_name,
+        todo_id,
+        csrfToken: request.csrfToken(),
+      });
+    } else {
+      response.status(401).json({ message: "Unauthorized user." });
     }
-
-    return res.json(todo); 
-
-  } catch (error) {
-    console.error(error);
-    Sentry.captureException(error);
-    return res.status(500).json({ message: 'Internal server error' });
   }
-});
+);
+
 
 module.exports = app;
