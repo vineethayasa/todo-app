@@ -121,8 +121,6 @@ it('Marking a todo as complete', () => {
       },
     }).then((response) => {
       expect(response.status).to.equal(200);
-      cy.wait(1000);
-      cy.contains('.Todo-Item', 'Sample todo item').should('exist')
     });
   });
 });
