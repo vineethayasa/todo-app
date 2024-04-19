@@ -127,18 +127,11 @@ const { GoogleGenerativeAI } = require('@google/generative-ai')
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 app.post('/add-natural', connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
-  const prompt = req.body.title
-  console.log("original",prompt);
+  const prompt = req.body.title;
+  const userId=req.user.id;
   try {
-    const { title, dueDate } = await getTitleAndDateFromGemini(prompt)
+    await getTitleAndDateFromGemini(prompt,userId)
 
-    await Todo.addTodo({
-      title,
-      dueDate,
-      completed: false,
-      userId: req.user.id,
-    })
-    
     return res.redirect('/todos')
   } catch (error) {
     console.error('Error adding todo with Gemini API:', error)
@@ -147,44 +140,114 @@ app.post('/add-natural', connectEnsureLogin.ensureLoggedIn(), async (req, res) =
   }
 })
 
-async function getTitleAndDateFromGemini (prompt) {
+async function getTitleAndDateFromGemini (prompt,userId) {
   try {
     const currentDate = new Date().toISOString().slice(0, 10);
     const systemPrompt = 
-      "You are assisting a user in managing their tasks within a to-do application. " +
-      "Users can input a sentence describing a task, potentially including a due date explicitly or implicitly (e.g., 'today', 'tomorrow'). "+
+      "You are assisting a user in managing their tasks within a to-do application. Users can create, delete, or mark tasks as complete. Your job is to analyze the user input and categorize it into one of three actions"+
+      "CASE 1: CREATE "+
+      "Users will input a sentence describing a task, potentially including a due date explicitly or implicitly (e.g., 'today', 'tomorrow'). "+
       "Your task is to analyze the input sentence, extracting the task title and its due date if mentioned. "+
       "If a due date is provided , include it in the output directly in the format YYYY-MM-DD ; "+
       "otherwise, extract the task title and analyze its urgency to decide on a due date yourself. "+
       `Make sure to use the current date ${currentDate} to compute any relative dates. `+
-      "Return the title and due date in the format 'Title : Due Date'. where duedate must and should be in the format YYYY-MM-DD"+
-      "The output format should be consistent, dont write Title followed by the actual title just directly give the title and due date sepearated by :"
-;
+      "Return 'Action : Title @ Due Date' (YYYY-MM-DD format). Here action is create . Sample return example : 'Create : Buy groceries @ 2024-04-24' "+
+      "CASE 2: DELETE Users want to delete certain tasks, like 'delete all completed todos'. Return 'Action: Condition' (completed, overdue, due later, due today). Here action is delete. Sample return example : 'Delete : completed'"+
+      "CASE 3: MARKASCOMPLETE Users want to mark tasks as complete, e.g., 'mark all overdue todos as complete'. Return 'Action: Condition' (overdue, due later, due today). Your task is to return a single sentence in the specified format for the given user input. Here action is mark. Sample return example : 'Mark : overdue'"+
+      "Important things to keep in mind while returning, The output format should be consistent, dont write action followed by the actual action just directly give the action, title and due date sepearated by : "
+      "USER INPUT IS :";
+
     const suggestion = await askGemini(systemPrompt + ' ' + prompt)
+    console.log("original here",suggestion);
+    const [action, data] = suggestion.split(':').map(str => str.trim());
 
-    // const [title, date] = suggestion.split(':').map(str => str.trim());
-    let title, date;
+    if (action.toLowerCase() === 'create') {
+      const  [title, date] = data.split('@').map(str => str.trim());
 
-    if (suggestion.includes("Title :")) {
-      [, title, date] = suggestion.match(/Title : (.*) Due Date : (.*)/);
-  } else {
-      [title, date] = suggestion.split(':').map(str => str.trim());
-  }
-    
-    console.log('Extracted title and date: ' + title + date)
-    if (!title || !date) {
-      throw new Error('Unable to extract the title and date from the suggestion.')
+      console.log("data",data);
+      console.log('Extracted title and date: ', title, date)
+      if (!title || !date) {
+        throw new Error('Unable to extract the title and date from the suggestion.')
+      }
+
+      const dueDate = new Date(date)
+      if (isNaN(dueDate.getTime())) {
+        throw new Error('Invalid due date format.')
+      }
+      
+      await Todo.addTodo({
+        title,
+        dueDate,
+        completed: false,
+        userId
+      })
+
+    } else if (action.toLowerCase() === 'delete') {
+      try {
+        const todosToDelete = await getTodosByCondition(data, userId); 
+        if (todosToDelete){
+          await Promise.all(todosToDelete.map(async (todo) => {
+            await Todo.remove(todo.id, userId);
+        }));
+        } else{
+          console.log("Empty todo list");
+        }
+        console.log("Todos deleted successfully");
+    } catch (error) {
+        Sentry.captureException(error); 
+        return response.status(422).json(error);
     }
 
-    const dueDate = new Date(date)
-    if (isNaN(dueDate.getTime())) {
-      throw new Error('Invalid due date format.')
+    } else if (action.toLowerCase() === 'mark') {
+      try {
+        const todosToMarkComplete = await getTodosByCondition(data, userId); 
+        if(todosToMarkComplete){
+          await Promise.all(todosToMarkComplete.map(async (todo) => {
+            const updatedTodo = await todo.setCompletionStatus(true); 
+            return updatedTodo;
+        }));
+        }else{
+          console.log("Empty todo list");
+        }
+    } catch (error) {
+        console.log(error);
+        Sentry.captureException(error); 
+        return response.status(422).json(error);
     }
-
-    return { title, dueDate }
+    } else {
+      throw new Error('Invalid action extracted from the suggestion.');
+    }
   } catch (error) {
-    console.error('Error getting title and date from Gemini API:', error)
-    throw error
+    console.error('Error getting action and conditions from Gemini API:', error);
+    throw error;
+  }
+}
+
+async function getTodosByCondition(conditions,loggedInUser) {
+  try {
+    const overdue = await Todo.overdue(loggedInUser);
+    const dueLater = await Todo.dueLater(loggedInUser);
+    const dueToday = await Todo.dueToday(loggedInUser);
+    const completedItems = await Todo.completedItems(loggedInUser);
+
+    if (conditions.includes('completed')) {
+      return completedItems;
+    }
+
+    if (conditions.includes('overdue' || 'over due')) {
+      return overdue;
+    }
+
+    if (conditions=='duelater' || conditions=='due later') {
+      return dueLater;
+    }
+
+    if (conditions=='duetoday' || conditions=='due today') {
+      return dueToday;
+    }
+  } catch (error) {
+    console.error('Error fetching todos to delete:', error);
+    throw error;
   }
 }
 
@@ -437,5 +500,22 @@ app.delete(
       }
     },
 );
+
+// a GET route to fetch todo details by ID
+app.get('/todo/:id', async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todo = await Todo.findById(todoId);
+
+    if (!todo) {
+      return res.status(404).json({ error: 'Todo not found' });
+    }
+
+    return res.json(todo);
+  } catch (error) {
+    console.error('Error fetching todo details:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = app;

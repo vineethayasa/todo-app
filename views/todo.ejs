@@ -4,12 +4,13 @@
     <%= data.length %>
     </span>
 </h5>
-<ul class="list-none">
+<div class="TodoList">
+  <ul class="list-none">
     <% for (var i =0; i <data.length;  i++ ) { %>
         <li class="Todo-Item">
             <div class="flex items-center w-fit ml-2 py-1 px-2 my-1 todoItem bg-rounded hover:bg-purple-100">
               <input type="checkbox" id="todo-checkbox-<%= data[i].id %>" <%= data[i].completed ?"checked" : "" %> onclick="updateTodo(<%= data[i].id %>)" class="w-4 h-4 bg-gray-100 text-blue-100" />
-              <label for="todo-checkbox-<%= data[i].id %>"  class="ml-2 text-sm text-gray-600 curser-pointer">
+              <label for="todo-checkbox-<%= data[i].id %>"  class="ml-2 text-sm text-gray-600 curser-pointer" id="todotitle">
                 <%= data[i].title %> <%= new Date(data[i].dueDate).toLocaleDateString(userLocale) %>
               </label>
               <a href="#" class="hidden trash-icon ml-2" id="deletebutton" onclick="deleteTodo(<%= data[i].id %>)">
@@ -21,3 +22,4 @@
           </li>
     <% } %>
 </ul>
+</div>

@@ -34,5 +34,7 @@
   "japanese": "Japonais",
   "french": "Français",
   "german": "Allemand",
-  "hindi": "Hindi"
+  "hindi": "Hindi",
+  "ai_prompt":"Utilisez l'IA pour gérer les tâches...",
+  "submit": "Soumettre"
 }

@@ -13,7 +13,7 @@ function login(email, password) {
   cy.visit(`http://localhost:3000/login`);
   cy.get('input[name="email"]').type(email);
   cy.get('input[name="password"]').type(password);
-  cy.get('form').submit();
+  cy.get('#signInButton').click();
   cy.visit(`http://localhost:3000/todos`);
 }
 
@@ -23,49 +23,107 @@ describe('Todo Application', () => {
     cy.visit(baseUrl);
   });
 
-  // it('Sign up', () => {
-  //   cy.visit(`${baseUrl}/signup`);
-  //   cy.get('input[name="firstName"]').type('Vineetha');
-  //   cy.get('input[name="lastName"]').type('Reddy');
-  //   cy.get('input[name="email"]').type('vineetha@test.com');
-  //   cy.get('input[name="password"]').type('12345678');
-  //   cy.get('button[type="submit"]').click();
-  //   cy.log('Current URL:', cy.url());
-  // });
+  it('Sign up', () => {
+    cy.visit(`${baseUrl}/signup`);
+    cy.get('input[name="firstName"]').type('Vineetha');
+    cy.get('input[name="lastName"]').type('Reddy');
+    cy.get('input[name="email"]').type('vineetha@test.com');
+    cy.get('input[name="password"]').type('12345678');
+    cy.get('#signUpButton').click();
+    
+  });
 
-  // it('Sign out', () => {
-  //   cy.visit(`${baseUrl}/todos`);
-  //   cy.request(`${baseUrl}/signout`);
-  // });
+  it('Sign out', () => {
+    cy.visit(`${baseUrl}/todos`);
+    cy.request(`${baseUrl}/signout`);
+  });
 
-  // it('Login', () => {
-  //   cy.visit(`${baseUrl}/login`);
-  //   cy.get('input[name="email"]').type('vineetha@test.com');
-  //   cy.get('input[name="password"]').type('12345678');
+  it('Login', () => {
+    cy.visit(`${baseUrl}/login`);
+    cy.get('input[name="email"]').type('vineetha@test.com');
+    cy.get('input[name="password"]').type('12345678');
 
-  //   cy.get('form').submit();
-  //   cy.visit(`${baseUrl}/todos`);
-  // });
+    cy.get('#signInButton').click();
+    cy.url().should('include', '/todos');
+  });
 
-  // it('Should not Login with invalid credentials', () => {
-  //   cy.visit(`${baseUrl}/login`);
-  //   cy.get('input[name="email"]').type('nonexistentuser@test.com');
-  //   cy.get('input[name="password"]').type('invalidpassword');
+  it('Should not Login with invalid credentials', () => {
+    cy.visit(`${baseUrl}/login`);
+    cy.get('input[name="email"]').type('nonexistentuser@test.com');
+    cy.get('input[name="password"]').type('invalidpassword');
 
-  //   cy.get('form').submit();
-  //   cy.url().should('include', '/login');
-  // });
+    cy.get('#signInButton').click();
+    cy.url().should('include', '/login');
+  });
 
-  // it('Creating a sample todo', () => {
-  //   login('vineetha@test.com', '12345678');
+  it('Creating a sample todo', () => {
+    login('vineetha@test.com', '12345678');
+  
+    cy.visit(`${baseUrl}/todos`);
+  
+    cy.get('meta[name="csrf-token"]').then((meta) => {
+      const csrfToken = meta.attr('content');
+  
+      cy.request({
+        method: 'POST',
+        url: `${baseUrl}/todos`,
+        form: true,
+        body: {
+          _csrf: csrfToken, 
+          title: 'Sample todo item',
+          dueDate: formatDateWithOffset(0),
+        },
+      }).then((response) => {
+        expect(response.status).to.equal(200);
+        cy.wait(1000);
+        cy.contains('.Todo-Item', 'Sample todo item').should('exist')
+      });
+    });
+  });
+  it('Deleting a todo', () => {
+    login('vineetha@test.com', '12345678');
 
-  //   cy.visit(`${baseUrl}/todos`);
-  //   cy.get('input[name="title"]').type('Sample todo item');
-  //   cy.get('input[name="dueDate"]').type(formatDateWithOffset(0));
+    cy.visit(`${baseUrl}/todos`);
 
-  //   cy.get('button[type="submit"]').click();
-  //   cy.wait(500);
+    cy.get('meta[name="csrf-token"]').then((meta) => {
+        const csrfToken = meta.attr('content');
 
-  //   cy.get('.Todo-Item').contains('Sample todo item').should('exist');
-  // });
+        cy.request({
+            method: 'POST',
+            url: `${baseUrl}/todos`,
+            form: true,
+            body: {
+                _csrf: csrfToken,
+                title: 'Sample todo for deletion',
+                dueDate: formatDateWithOffset(0),
+            },
+        }).then((response) => {
+          expect(response.status).to.equal(200);
+        });
+    });
+});
+it('Marking a todo as complete', () => {
+  login('vineetha@test.com', '12345678');
+
+  cy.visit(`${baseUrl}/todos`);
+
+  cy.get('meta[name="csrf-token"]').then((meta) => {
+    const csrfToken = meta.attr('content');
+
+    cy.request({
+      method: 'POST',
+      url: `${baseUrl}/todos`,
+      form: true,
+      body: {
+        _csrf: csrfToken, 
+        title: 'Sample todo item new',
+        dueDate: formatDateWithOffset(0),
+      },
+    }).then((response) => {
+      expect(response.status).to.equal(200);
+      cy.wait(1000);
+      cy.contains('.Todo-Item', 'Sample todo item').should('exist')
+    });
+  });
+});
 });

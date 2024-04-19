@@ -108,7 +108,7 @@
                   <input type="date" name="dueDate" id="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4 " />
                 </div>
                 <div class="flex-none">
-                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2"><%= i18next.t('add') %></button>
+                  <button type="submit" id="todosubmit" class="bg-green-600 text-white px-6 py-1.5 rounded font-medium mr-2"><%= i18next.t('add') %></button>
                 </div>
               </div>
             </form>
@@ -116,10 +116,10 @@
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <div class="flex gap-2 py-4">
                 <div class="flex-auto">
-                  <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
+                  <input type="text" name="title" placeholder="<%= i18next.t('ai_prompt') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm mr-1"/>
                 </div>
                 <div class="flex-none">
-                  <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('add') %></button>
+                  <button type="submit" class="bg-green-600 text-white px-4 py-1.5 rounded font-medium mr-2 mb-2"><%= i18next.t('submit') %></button>
                 </div>
               </div>
           </form> -->
