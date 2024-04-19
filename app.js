@@ -502,20 +502,27 @@ app.delete(
 );
 
 // a GET route to fetch todo details by ID
-app.get('/todo/:id', async (req, res) => {
+app.get('/todo/:id', async (request, response) => {
   try {
-    const todoId = req.params.id;
-    const todo = await Todo.findById(todoId);
+    const todoId = request.params.id;
+    
+    // Introducing a different method to find todo by ID
+    const todo_by_id = await findTodoById(todoId);
 
-    if (!todo) {
-      return res.status(404).json({ error: 'Todo not found' });
+    if (!todo_by_id) {
+      return response.status(404).json({ error: 'The requested todo item does not exist' });
     }
 
-    return res.json(todo);
+    return response.json({ todoId: todo_by_id._id, title: todo_by_id.name, completed: todo_by_id.completed });
   } catch (error) {
     console.error('Error fetching todo details:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Error while fetching todo details' });
   }
 });
+
+// Define a new function to find todo by ID
+async function findTodoById(id) {
+  // Add your implementation here to find todo by ID using a different method
+}
 
 module.exports = app;
