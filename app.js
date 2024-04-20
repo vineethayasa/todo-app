@@ -1,4 +1,6 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable linebreak-style */
@@ -505,6 +507,5 @@ app.delete(
 		}
 	},
 );
-
 
 module.exports = app;
