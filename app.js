@@ -513,13 +513,16 @@ app.get(
 	connectEnsureLogin.ensureLoggedIn(),
 	async (request, response) => {
 	  const todo = await Todo.getTodoById(request.params.id);
-	  if (todo.userId == request.user.id) {
+	  // Branch Modification: Additional functionality
+	  if (todo && todo.userId == request.user.id) {
 			const todo_name = todo.todo_name;
 			const todo_id = request.params.id;
 			response.render("edit_todo", {
 		  todo_name,
 		  todo_id,
 		  csrfToken: request.csrfToken(),
+		  // Branch Modification: Additional data
+		  additionalData: "Data from Branch",
 			});
 	  } else {
 			response.status(401).json({ message: "Unauthorized user." });
