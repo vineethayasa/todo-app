@@ -1,5 +1,4 @@
 {
-    "presets": ["@babel/preset-env"],
-    "include": ["index.js", "app.js"]
+    "presets": ["@babel/preset-env"]
 }
   
