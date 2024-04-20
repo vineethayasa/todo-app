@@ -515,6 +515,7 @@ app.get(
 	  const todo = await Todo.getTodoById(request.params.id);
 	  // Branch Modification: Additional functionality
 	  if (todo && todo.userId == request.user.id) {
+
 			const todo_name = todo.todo_name;
 			const todo_id = request.params.id;
 			response.render("edit_todo", {
