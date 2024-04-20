@@ -13,13 +13,13 @@
     </title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
+  <body class="font-mono">
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include("header.ejs") %> 
             <h6 class="py-4"><%= i18next.t('logintitle') %></h6>
             <form action="/session" method="post">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">                
+                <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">                
                 <div class="py-3">
                     <label for="email"><%= i18next.t('emailLabel') %></label>
                     <input type="email" name="email" class="border border-gray-300 text-gray-900 rounded p-2 w-full">

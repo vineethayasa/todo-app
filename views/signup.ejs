@@ -12,13 +12,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/style.css" rel="stylesheet" />
   </head>
-  <body>
+  <body class="font-mono">
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include("header.ejs") %> 
             <h6 class="py-4"><%= i18next.t('signuptitle') %></h6>
             <form action="/users" method="post">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">
                 <div class="py-3">
                     <label for="firstName"><%= i18next.t('firstNameLabel') %></label>
                     <input type="text" name="firstName" class="required border border-gray-300 text-gray-900 rounded p-2 w-full">

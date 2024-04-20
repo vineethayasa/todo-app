@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <meta name="csrf-token" content="<%= csrfToken %>">
-        <link href="./css/styles.css" rel="stylesheet">
         <title><%= i18next.t('Todo Application') %></title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1"></script>
@@ -85,10 +84,13 @@
           .blur-background {
             filter: blur(3px);
           }
+          .Todo-Item:hover .trash-icon {
+            display: block;
+          }
       </style>
     </head>
 
-    <body>
+    <body class="font-mono">
        <div class= "grid  grid-cols-6 addhere">
         <div class="col-start-3 col-span-2">          
             <%- include("header.ejs") %> 
@@ -99,7 +101,7 @@
               </a>
             </div>
             <form action="/todos" method="post">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">
               <div class="flex gap-2 py-4">
                 <div class="flex-auto">
                   <input type="text" name="title" placeholder="<%= i18next.t('whats_next') %>" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"/>
