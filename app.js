@@ -521,8 +521,6 @@ app.get(
 		  todo_name,
 		  todo_id,
 		  csrfToken: request.csrfToken(),
-		  // Branch Modification: Additional data
-		  additionalData: "Data from Branch",
 			});
 	  } else {
 			response.status(401).json({ message: "Unauthorized user." });
