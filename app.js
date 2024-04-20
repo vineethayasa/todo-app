@@ -28,7 +28,7 @@ const flash = require('connect-flash');
 
 app.use(express.urlencoded({extended: false}));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.use(flash());
@@ -520,5 +520,23 @@ app.get(
   }
 );
 
+const myFunction = () => {
+  // Example 1
+  const greet = (name) => `Hello, ${name}!`;
+  console.log(greet("Alice"));
+
+  // Example 2
+  const person = { firstName: "Bob", age: 25 };
+  const { firstName, age } = person;
+  console.log(`Name: ${firstName}, Age: ${age}`);
+
+  // Example 3
+  const numbers = [1, 2, 3, 4, 5];
+  const [first, second, , fourth] = numbers;
+  console.log(`First: ${first}, Second: ${second}, Fourth: ${fourth}`);
+};
+
+// Call the function
+myFunction();
 
 module.exports = app;
