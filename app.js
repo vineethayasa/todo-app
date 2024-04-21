@@ -508,24 +508,4 @@ app.delete(
 	},
 );
 
-app.get(
-	"/edit_todo/:name/:id",
-	connectEnsureLogin.ensureLoggedIn(),
-	async (request, response) => {
-	  const todo = await Todo.getTodoById(request.params.id);
-	  // Branch Modification: Additional functionality
-	  if (todo && todo.userId == request.user.id) {
-			const todo_name = todo.todo_name;
-			const todo_id = request.params.id;
-			response.render("edit_todo", {
-		  todo_name,
-		  todo_id,
-		  csrfToken: request.csrfToken(),
-			});
-	  } else {
-			response.status(401).json({ message: "Unauthorized user." });
-	  }
-	}
-);
-
 module.exports = app;
